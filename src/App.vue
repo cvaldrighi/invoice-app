@@ -1,18 +1,16 @@
 <template>
-  <div>
-    <div v-if="!mobile" class="app flex flex-column">
-      <Navigation />
-      <div class="app-content flex flex-column">
-        <InvoiceModal />
-        <router-view />
-      </div>
-    </div>
-    <div v-else class="mobile-message flex flex-column">
-      <h2>Sorry, this app is not supported on Mobile Devices</h2>
-      <p>To use this app, please use a Desktop Device.</p>
+
+  <div v-if="!mobile" class="app flex flex-column">
+    <Navigation />
+    <div class="app-content flex flex-column">
+      <InvoiceModal />
+      <router-view />
     </div>
   </div>
-  <router-view />
+  <div v-else class="mobile-message flex flex-column">
+    <h2>Sorry, this app is not supported on Mobile Devices</h2>
+    <p>To use this app, please use a Desktop Device.</p>
+  </div>
 </template>
 
 <script>
