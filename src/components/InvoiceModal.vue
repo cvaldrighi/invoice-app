@@ -1,6 +1,7 @@
 <template>
     <div @click="checkClick" ref="invoiceWrap" class="invoice-wrap flex flex-column">
         <form @submit.prevent="submitForm" class="invoice-content">
+            <Loading v-show="loading" />
             <h1>New Invoice</h1>
 
             <!-- Client -->
@@ -107,13 +108,18 @@
 <script>
 import { mapMutations } from 'vuex';
 import { uid } from 'uid';
+import Loading from '../components/Loading.vue';
 import db from '../firebase/firebaseInit.js';
 
 export default {
     name: "invoiceModal",
+    components: {
+        Loading
+    },
     data() {
         return {
             dateOptions: { year: "numeric", month: "short", day: "numeric" },
+            loading: null,
             clientName: null,
             clientEmail: null,
             clientStreetAddress: null,
@@ -170,6 +176,8 @@ export default {
                 return;
             }
 
+            this.loading = true;
+
             this.calcInvoiceTotal();
 
             const dataBase = db.collection('invoice').doc();
@@ -187,10 +195,14 @@ export default {
                 paymentTerms: this.paymentTerms,
                 paymentDueDateUnix: this.paymentDueDateUnix,
                 paymentDueDate: this.paymentDueDate,
+                invoiceItemList: this.invoiceItemList,
+                invoiceTotal: this.invoiceTotal,
                 invoicePending: this.invoicePending,
                 invoiceDraft: this.invoiceDraft,
-                invoicePaid: null
+                invoicePaid: null,
             });
+
+            this.loading = false;
 
             this.TOGGLE_INVOICE();
 
