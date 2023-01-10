@@ -204,7 +204,7 @@ export default {
                 invoiceTotal: this.invoiceTotal,
                 invoicePending: this.invoicePending,
                 invoiceDraft: this.invoiceDraft,
-                invoicePaid: null,
+                invoicePaid: this.invoicePaid,
             });
 
             this.loading = false;

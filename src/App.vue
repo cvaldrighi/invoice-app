@@ -1,18 +1,19 @@
 <template>
-
-  <div v-if="!mobile" class="app flex flex-column">
-    <Navigation />
-    <div class="app-content flex flex-column">
-      <Modal v-if="modalActive" />
-      <transition name="invoice">
-        <InvoiceModal v-if="invoiceModal" />
-      </transition>
-      <router-view />
+  <div v-if="invoicesLoaded">
+    <div v-if="!mobile" class="app flex flex-column">
+      <Navigation />
+      <div class="app-content flex flex-column">
+        <Modal v-if="modalActive" />
+        <transition name="invoice">
+          <InvoiceModal v-if="invoiceModal" />
+        </transition>
+        <router-view />
+      </div>
     </div>
-  </div>
-  <div v-else class="mobile-message flex flex-column">
-    <h2>Sorry, this app is not supported on Mobile Devices</h2>
-    <p>To use this app, please use a Desktop Device.</p>
+    <div v-else class="mobile-message flex flex-column">
+      <h2>Sorry, this app is not supported on Mobile Devices</h2>
+      <p>To use this app, please use a Desktop Device.</p>
+    </div>
   </div>
 </template>
 
@@ -21,7 +22,7 @@ import Navigation from "./components/Navigation";
 import InvoiceModal from "./components/InvoiceModal";
 import Modal from "./components/Modal";
 
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -34,10 +35,12 @@ export default {
     Modal
   },
   created() {
+    this.GET_INVOICES();
     this.checkScreen();
     window.addEventListener("resize", this.checkScreen);
   },
   methods: {
+    ...mapActions(['GET_INVOICES']),
     checkScreen() {
       const windowWidth = window.innerWidth;
       if (windowWidth <= 750) {
@@ -48,7 +51,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(["invoiceModal", "modalActive"])
+    ...mapState(["invoiceModal", "modalActive", "invoicesLoaded"])
   }
 }
 
