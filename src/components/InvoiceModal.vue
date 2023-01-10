@@ -107,6 +107,7 @@
 <script>
 import { mapMutations } from 'vuex';
 import { uid } from 'uid';
+import db from '../firebase/firebaseInit.js';
 
 export default {
     name: "invoiceModal",
@@ -150,7 +151,56 @@ export default {
         },
         deleteInvoiceItem(id) {
             this.invoiceItemList = this.invoiceItemList.filter((item) => item.id !== id);
+        },
+        calcInvoiceTotal() {
+            this.invoiceTotal = 0;
+            this.invoiceItemList.forEach(item => {
+                this.invoiceTotal += item.total
+            });
+        },
+        publishInvoice() {
+            this.invoicePending = true;
+        },
+        saveDraft() {
+            this.invoiceDraft = true;
+        },
+        async uploadInvoice() {
+            if (this.invoiceItemList.length <= 0) {
+                alert('Please, insure you filled out work items.');
+                return;
+            }
+
+            this.calcInvoiceTotal();
+
+            const dataBase = db.collection('invoice').doc();
+
+            await dataBase.set({
+                invoiceId: uid(6),
+                clientName: this.clientName,
+                clientEmail: this.clientEmail,
+                clientStreetAddress: this.clientStreetAddress,
+                clientCity: this.clientCity,
+                clientZipCode: this.clientZipCode,
+                clientCountry: this.clientCountry,
+                invoiceDateUnix: this.invoiceDateUnix,
+                invoiceDate: this.invoiceDate,
+                paymentTerms: this.paymentTerms,
+                paymentDueDateUnix: this.paymentDueDateUnix,
+                paymentDueDate: this.paymentDueDate,
+                invoicePending: this.invoicePending,
+                invoiceDraft: this.invoiceDraft,
+                invoicePaid: null
+            });
+
+            this.TOGGLE_INVOICE();
+
+
+
+        },
+        submitForm() {
+            this.uploadInvoice();
         }
+
     },
     watch: {
         paymentTerms() {

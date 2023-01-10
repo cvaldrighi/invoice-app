@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "firebase": "^9.15.0",
     "uid": "^2.0.0",
     "vue": "^3.0.11",
     "vue-router": "^4.0.0-0",
@@ -27,5 +28,18 @@
     "node-sass": "^6.0.1",
     "sass": "^1.57.1",
     "sass-loader": "^10.4.1"
-  }
+  },
+  "description": "## Project setup ``` npm install ```",
+  "main": ".eslintrc.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cvaldrighi/invoice-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cvaldrighi/invoice-app/issues"
+  },
+  "homepage": "https://github.com/cvaldrighi/invoice-app#readme"
 }
