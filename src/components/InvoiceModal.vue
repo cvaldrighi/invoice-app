@@ -2,7 +2,8 @@
     <div @click="checkClick" ref="invoiceWrap" class="invoice-wrap flex flex-column">
         <form @submit.prevent="submitForm" class="invoice-content">
             <Loading v-show="loading" />
-            <h1>New Invoice</h1>
+            <h1 v-if="!editInvoice">New Invoice</h1>
+            <h1 v-else>Edit Invoice</h1>
 
             <!-- Client -->
             <div class="client flex flex-column">
@@ -51,6 +52,7 @@
                 <div class="input flex flex-column">
                     <label for="paymentTerms">Payment Terms</label>
                     <select type="text" id="paymentTerms" v-model="paymentTerms">
+                        <option value="0">today</option>
                         <option value="30">30 days</option>
                         <option value="60">60 days</option>
                     </select>
@@ -94,8 +96,17 @@
                     <button type="button" @click="closeInvoice" class="red">Cancel</button>
                 </div>
                 <div class="right flex">
-                    <button type="submit" @click="saveDraft" class="dark-purple">Save Draft</button>
-                    <button type="submit" @click="publishInvoice" class="purple">Create Invoice</button>
+                    <button v-if="!editInvoice" type="submit" @click="saveDraft" class="dark-purple">
+                        Save Draft
+                    </button>
+                    <button v-if="!editInvoice" type="submit" @click="publishInvoice" class="purple">
+                        Create Invoice
+                    </button>
+                    <button v-if="editInvoice" type="submit" class="purple">
+                        Update Invoice
+                    </button>
+
+
                 </div>
 
             </div>
@@ -106,7 +117,7 @@
     </div>
 </template>
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 import { uid } from 'uid';
 import Loading from '../components/Loading.vue';
 import db from '../firebase/firebaseInit.js';
@@ -142,7 +153,7 @@ export default {
         this.invoiceDate = new Date(this.invoiceDateUnix).toLocaleDateString('en-us', this.dateOptions);
     },
     methods: {
-        ...mapMutations(['TOGGLE_INVOICE', 'TOGGLE_MODAL']),
+        ...mapMutations(['TOGGLE_INVOICE', 'TOGGLE_MODAL', 'TOGGLE_EDIT_INVOICE']),
         checkClick(e) {
             if (e.target === this.$refs.invoiceWrap) {
                 this.TOGGLE_MODAL();
@@ -150,6 +161,9 @@ export default {
         },
         closeInvoice() {
             this.TOGGLE_INVOICE();
+            if (this.editInvoice) {
+                this.TOGGLE_EDIT_INVOICE();
+            }
         },
         addNewInvoiceItem() {
             this.invoiceItemList.push({
@@ -203,16 +217,11 @@ export default {
                 invoiceItemList: this.invoiceItemList,
                 invoiceTotal: this.invoiceTotal,
                 invoicePending: this.invoicePending,
-                invoiceDraft: this.invoiceDraft,
-                invoicePaid: this.invoicePaid,
+                invoiceDraft: this.invoiceDraft
             });
 
             this.loading = false;
-
             this.TOGGLE_INVOICE();
-
-
-
         },
         submitForm() {
             this.uploadInvoice();
@@ -225,6 +234,9 @@ export default {
             this.paymentDueDateUnix = futureDate.setDate(futureDate.getDate() + parseInt(this.paymentTerms));
             this.paymentDueDate = new Date(this.paymentDueDateUnix).toLocaleDateString('en-us', this.dateOptions);
         }
+    },
+    computed: {
+        ...mapState(['editInvoice']),
     }
 }
 </script>

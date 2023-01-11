@@ -20,7 +20,7 @@ import { mapMutations, mapState } from 'vuex';
                 </div>
             </div>
             <div class="right flex">
-                <button class="dark-purple" @click="toggleEditInvoice(currentInvoice.docId)">Edit</button>
+                <button class="dark-purple" @click="toggleEditInvoice">Edit</button>
                 <button class="red" @click="deleteInvoice(currentInvoice.docId)">Delete</button>
                 <button class="green" v-if="currentInvoice.invoicePending"
                     @click="updateStatusToPaid(currentInvoice.docId)">Mark as Paid</button>
@@ -86,7 +86,6 @@ import { mapMutations, mapState } from 'vuex';
 </template>
 <script>
 import { mapMutations, mapState } from 'vuex';
-
 export default {
     name: 'invoiceView',
     data() {
@@ -98,11 +97,16 @@ export default {
         this.getCurrentInvoice();
     },
     methods: {
-        ...mapMutations(['SET_CURRENT_INVOICE']),
+        ...mapMutations(['SET_CURRENT_INVOICE', 'TOGGLE_EDIT_INVOICE', 'TOGGLE_INVOICE']),
 
         getCurrentInvoice() {
             this.SET_CURRENT_INVOICE(this.$route.params.invoiceId);
             this.currentInvoice = this.currentInvoiceArray[0];
+        },
+
+        toggleEditInvoice() {
+            this.TOGGLE_EDIT_INVOICE();
+            this.TOGGLE_INVOICE();
         }
     },
     computed: {
