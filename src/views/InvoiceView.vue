@@ -36,10 +36,6 @@ import { mapMutations, mapState } from 'vuex';
                 <div class="left flex flex-column">
                     <p><span>#</span>{{ currentInvoice.invoiceId }}</p>
                 </div>
-                <div class="right flex flex-column">
-                    <p>POR ALGO AQUI</p>
-
-                </div>
             </div>
             <div class="middle flex">
                 <div class="payment flex flex-column">
@@ -209,11 +205,6 @@ export default {
                         color: #888eb0;
                     }
                 }
-            }
-
-            .right {
-                font-size: 12px;
-                align-items: flex-end;
             }
         }
 
