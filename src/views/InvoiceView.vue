@@ -110,7 +110,14 @@ export default {
         }
     },
     computed: {
-        ...mapState(['currentInvoiceArray'])
+        ...mapState(["currentInvoiceArray", "editInvoice"])
+    },
+    watch: {
+        editInvoice() {
+            if (!this.editInvoice) {
+                this.currentInvoice = this.currentInvoiceArray[0];
+            }
+        }
     }
 }
 </script>
